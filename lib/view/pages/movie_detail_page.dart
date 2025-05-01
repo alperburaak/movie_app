@@ -11,7 +11,7 @@ class MovieDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(movie.title)),
+      appBar: AppBar(title: Text(movie.title ?? 'Film Detayı')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -19,9 +19,13 @@ class MovieDetailPage extends StatelessWidget {
           children: [
             Center(
               child: CachedNetworkImage(
-                imageUrl: 'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                imageUrl:
+                    movie.posterPath != null && movie.posterPath!.isNotEmpty
+                        ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
+                        : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg',
                 placeholder:
-                    (context, url) => const CircularProgressIndicator(),
+                    (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
                 errorWidget:
                     (context, url, error) =>
                         const Icon(Icons.image_not_supported),
@@ -30,12 +34,12 @@ class MovieDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              movie.title,
+              movie.title ?? 'Başlık Yok',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              'Yayın Tarihi: ${movie.releaseDate.toString().split(' ')[0]}',
+              'Yayın Tarihi: ${movie.releaseDate != null ? movie.releaseDate!.toString().split(' ')[0] : 'Bilinmiyor'}',
               style: const TextStyle(color: Colors.grey),
             ),
             const SizedBox(height: 8),
@@ -43,7 +47,9 @@ class MovieDetailPage extends StatelessWidget {
               children: [
                 const Icon(Icons.star, color: Colors.amber),
                 const SizedBox(width: 4),
-                Text('${movie.voteAverage} (${movie.voteCount} oy)'),
+                Text(
+                  '${movie.voteAverage?.toStringAsFixed(1) ?? '0.0'} (${movie.voteCount ?? 0} oy)',
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -52,7 +58,11 @@ class MovieDetailPage extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const SizedBox(height: 8),
-            Text(movie.overview),
+            Text(
+              movie.overview?.isNotEmpty == true
+                  ? movie.overview!
+                  : 'Açıklama bulunmamaktadır.',
+            ),
           ],
         ),
       ),
