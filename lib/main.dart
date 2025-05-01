@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/core/theme.dart';
+import 'package:movie_app/models/movie_model.dart';
+import 'package:movie_app/provider/movie_provider.dart';
+import 'package:movie_app/view/pages/main_page.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-import 'provider/movie_provider.dart';
-import 'view/pages/home_page.dart';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(ResultAdapter());
+
+  await Hive.openBox<Result>('favoritesBox');
+
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => MovieProvider())],
@@ -20,8 +30,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Movie App',
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.deepPurple),
-      home: const HomePage(),
+      theme: appTheme,
+      debugShowCheckedModeBanner: false,
+      home: const MainPage(),
     );
   }
 }
