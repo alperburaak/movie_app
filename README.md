@@ -71,6 +71,7 @@ Bu Flutter uygulaması, [The Movie Database (TMDB)](https://www.themoviedb.org/)
 
 ##  Bağımlılıklar
 
+```yaml
 dependencies:
   flutter:
     sdk: flutter
